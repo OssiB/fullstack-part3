@@ -84,7 +84,7 @@ app.post('/api/persons/', (req, res) => {
   const body = req.body
 
   if (body.content === undefined) {
-    return req.status(400).json({ error: 'content missing' })
+    return res.status(400).json({ error: 'content missing' })
   }
 
   const contact = new Contact({
@@ -93,7 +93,7 @@ app.post('/api/persons/', (req, res) => {
   })
 
   contact.save().then(savedContact => {
-    response.json(savedContact.toJSON())
+    res.json(savedContact.toJSON())
   })
 })
 
