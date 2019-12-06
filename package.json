@@ -6,13 +6,18 @@
   "scripts": {
     "start": "node index.js",
     "watch": "nodemon index.js",
-    "test": "echo \\\"Error: no test specified\\\" && exit 1"
+    "test": "echo \\\"Error: no test specified\\\" && exit 1",
+    "build:ui": "rm -rf build && cd /Users/ossibister/Development/fullstack/full-stack-part2/puhelinluettelo && npm run build --prod && cp -r build /Users/ossibister/Development/fullstack-part3/",
+    "deploy": "git push heroku master",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",    
+    "logs:prod": "heroku logs --tail"
   },
   "author": "Ossi Bister",
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "mongoose": "^5.7.13",
     "morgan": "^1.9.1",
     "morgan-body": "^2.4.8",
     "node-uuid": "^1.4.8"

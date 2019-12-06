@@ -44,7 +44,7 @@ let persons = [
   },
   {
     "name": "Ossi Bister",
-    "number": "040 77 0531",
+    "number": "040 77 0532",
     "id": 5
   }
 
@@ -56,16 +56,19 @@ app.get('/api/persons', (req, res) => {
   
   res.json(persons)
 })
+
 app.get('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
+  console.log(id)
   const person = persons.find(person => person.id === id)
   if (person) {
-    response.json(note)
+    response.json(person)
   } else {
     response.status(404).end()
   }
 })
-app.delete('api/persons/:id', (request, response) => {
+
+app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   console.log(id)
   persons = persons.filter(person => person.id !== id)
