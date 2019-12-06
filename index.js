@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 const Contact = require('./models/contact')
 const morgan = require('morgan')
 app.use(bodyParser.json())
+
 const cors = require('cors')
 
 app.use(cors())
@@ -80,10 +81,10 @@ app.delete('/api/persons/:id', (request, response, next) => {
 })
 
 app.post('/api/persons/', (req, res) => {
-  const body = request.body
+  const body = req.body
 
   if (body.content === undefined) {
-    return response.status(400).json({ error: 'content missing' })
+    return req.status(400).json({ error: 'content missing' })
   }
 
   const contact = new Contact({
