@@ -83,8 +83,8 @@ app.delete('/api/persons/:id', (request, response, next) => {
 app.post('/api/persons/', (req, res) => {
   const body = req.body
 
-  if (body.content === undefined) {
-    return res.status(400).json({ error: 'content missing' })
+  if (body.name === undefined) {
+    return res.status(400).json({ error: 'name missing' })
   }
 
   const contact = new Contact({
