@@ -89,7 +89,7 @@ app.post('/api/persons/', (req, res) => {
 
   const contact = new Contact({
     number: body.number,
-    important: body.name
+    name: body.name
   })
 
   contact.save().then(savedContact => {
