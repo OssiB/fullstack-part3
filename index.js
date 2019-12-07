@@ -1,4 +1,4 @@
-require('dotenv').config()
+
 const express = require('express')
 require('dotenv').config()
 
@@ -22,10 +22,10 @@ const requestLogger = (request, response, next) => {
 
 app.use(express.static('build'))
 app.use(requestLogger)
-morgan.token('person', function getPerson(req, res) { return JSON.stringify(req.body) })
+morgan.token('person', function getPerson(req) { return JSON.stringify(req.body) })
 
 
-const assignPerson = (req, res, next) => {
+7/*const assignPerson = (req, res, next) => {
   if (req.method === 'POST') {
     req.person = req.body
   }
@@ -34,7 +34,7 @@ const assignPerson = (req, res, next) => {
   }
   next()
 }
-/*app.use(assignPerson )
+app.use(assignPerson )
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :person '))*/
 
@@ -43,8 +43,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :p
 app.get('/api/persons', (req, res) => {
   Contact.find({}).then(contacts => {
     res.json(contacts.map(contact => contact.toJSON()))
-  });
-
+  })
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -67,14 +66,14 @@ app.put('/api/persons/:id', (request, response, next) => {
   }
 
   Contact.findByIdAndUpdate(request.params.id, contact, { new: true })
-    .then(updatedNote => {
+    .then(updatedContact => {
       response.json(updatedContact.toJSON())
     })
     .catch(error => next(error))
 })
 app.delete('/api/persons/:id', (request, response, next) => {
   Contact.findByIdAndRemove(request.params.id)
-    .then(result => {
+    .then(() => {
       response.status(204).end()
     })
     .catch(error => next(error))
@@ -97,7 +96,24 @@ app.post('/api/persons/', (req, res) => {
   })
 })
 
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
 
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError' && error.kind === 'ObjectId') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
+  next(error)
+}
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
