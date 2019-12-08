@@ -1,5 +1,6 @@
 
 const express = require('express')
+
 require('dotenv').config()
 
 const app = express()
@@ -79,7 +80,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-app.post('/api/persons/', (req, res) => {
+app.post('/api/persons/', (req, res,next) => {
   const body = req.body
 
   if (body.name === undefined) {
@@ -94,6 +95,7 @@ app.post('/api/persons/', (req, res) => {
   contact.save().then(savedContact => {
     res.json(savedContact.toJSON())
   })
+    .catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
@@ -108,8 +110,11 @@ const errorHandler = (error, request, response, next) => {
   if (error.name === 'CastError' && error.kind === 'ObjectId') {
     return response.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
+   
     return response.status(400).json({ error: error.message })
   }
+  
+
   next(error)
 }
 
