@@ -26,21 +26,6 @@ app.use(requestLogger)
 morgan.token('person', function getPerson(req) { return JSON.stringify(req.body) })
 
 
-7/*const assignPerson = (req, res, next) => {
-  if (req.method === 'POST') {
-    req.person = req.body
-  }
-  else {
-    req.person = null
-  }
-  next()
-}
-app.use(assignPerson )
-
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :person '))*/
-
-
-
 app.get('/api/persons', (req, res) => {
   Contact.find({}).then(contacts => {
     res.json(contacts.map(contact => contact.toJSON()))
